@@ -1,0 +1,44 @@
+name: Fetch latest data and deploy with Datasette
+
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+        cache: pip
+    - name: Install Python dependencies
+      run: |
+        pip install -r requirements.txt
+    - name: Build database
+      run: |-
+        # Import CSV file
+        curl https://pldb.com/pldb.csv | \
+          sqlite-utils insert pldb.db languages - --csv --pk pldbId --detect-types
+        # Configure full-text search
+        sqlite-utils enable-fts pldb.db languages title wikipedia.summary
+    - name: Deploy to Vercel
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      run: |-
+        datasette publish vercel pldb.db \
+          --token $VERCEL_TOKEN \
+          --project pldb \
+          --scope datasette \
+          --title "PLDB: a Programming Language Database" \
+          --source "PLDB" \
+          --source_url "https://pldb.com/" \
+          --install datasette-graphql \
+          --install datasette-block-robots \
+          --setting suggest_facets off \
+          --setting default_page_size 20
