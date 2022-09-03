@@ -3,7 +3,7 @@ source: "PLDB"
 source_url: "https://pldb.com/"
 title: 
 databases:
-  pld:
+  pldb:
     tables:
       languages:
         facets:
