@@ -1,0 +1,10 @@
+title: "PLDB: a Programming Language Database"
+source: "PLDB"
+source_url: "https://pldb.com/"
+title: 
+databases:
+  pld:
+    tables:
+      languages:
+        facets:
+        - type

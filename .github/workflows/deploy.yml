@@ -35,10 +35,8 @@ jobs:
           --token $VERCEL_TOKEN \
           --project pldb \
           --scope datasette \
-          --title "PLDB: a Programming Language Database" \
-          --source "PLDB" \
-          --source_url "https://pldb.com/" \
           --install datasette-graphql \
           --install datasette-block-robots \
           --setting suggest_facets off \
-          --setting default_page_size 20
+          --setting default_page_size 20 \
+          --metadata metadata.yml
